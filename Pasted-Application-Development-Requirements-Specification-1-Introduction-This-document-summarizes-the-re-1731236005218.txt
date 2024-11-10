@@ -1,0 +1,92 @@
+Application Development Requirements Specification
+
+1. Introduction
+
+This document summarizes the requirements definition for an application that manages order information. The application will use a database to store order information and provide users with functionalities to view, add, and bulk import order data.
+
+2. System Overview
+
+This system is an order management application that offers the following features:
+	•	Database management of order information
+	•	Display of order list
+	•	Addition of new orders
+	•	Bulk import of order information from CSV files
+
+3. Functional Requirements
+
+3.1 Database
+
+	•	Use of Database: A database will be used to persistently save and manage order information.
+	•	Table Structure:
+	•	Table Name: order
+	•	Columns:
+	•	Customer (String type)
+	•	Amount (Numeric type)
+
+3.2 User Interface (UI)
+
+3.2.1 Order List Display
+
+	•	Function: Display all order information saved in the order table in a list format.
+	•	Display Items:
+	•	Customer
+	•	Amount
+	•	Requirements:
+	•	Design a user-friendly interface for easy viewing.
+	•	Sorting and filtering functionalities are optional.
+
+3.2.2 Adding New Orders
+
+	•	Function: Add new order information to the database.
+	•	Operation Steps:
+	1.	Click the “Add Order” button on the screen.
+	2.	A popup window for creating a new order appears.
+	3.	A form to input the customer and amount is displayed.
+	4.	The user inputs the information and clicks the “Save” button to store it in the database.
+	•	Requirements:
+	•	Perform validation on required input fields.
+	•	Only allow numerical values for the amount.
+
+3.2.3 Bulk Import from CSV Files
+
+	•	Function: Bulk import order information from a CSV file stored on the local PC into the database.
+	•	Operation Steps:
+	1.	Click the “CSV Import” button on the screen.
+	2.	The file selection dialog of the local PC appears.
+	3.	Select the CSV file to import and click “Open.”
+	4.	The system reads the CSV file and saves the order information into the database.
+	•	Requirements:
+	•	The CSV file format should be as follows:
+	•	The first line contains headers (Customer, Amount)
+	•	From the second line onwards, order data is listed
+	•	Perform data validation during import; display an error message if there is invalid data.
+	•	Define how to handle duplicate data (overwrite, skip, or error).
+
+4. Non-Functional Requirements
+
+4.1 Usability
+
+	•	Provide an intuitive and user-friendly interface.
+	•	Appropriately display error messages and operation guides.
+
+4.2 Performance
+
+	•	Optimize to ensure fast list display and import even with large amounts of data.
+
+4.3 Security
+
+	•	Sanitize input data to prevent attacks such as SQL injection.
+	•	Implement mechanisms to prevent unauthorized access to the application and database.
+
+5. Development Environment and Technical Requirements
+
+5.1 Development Environment
+
+	•	Frontend: HTML5, CSS3, JavaScript (use frameworks as needed)
+	•	Backend: Server-side language (e.g., Python, Ruby, PHP, Java)
+	•	Database: Relational databases like MySQL or PostgreSQL
+
+5.2 Technical Requirements
+
+	•	Browser Compatibility: Should work on all major modern browsers (Chrome, Firefox, Edge, Safari).
+	•	Responsive Design: Make it usable on mobile devices if necessary.
