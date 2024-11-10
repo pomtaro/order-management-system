@@ -4,6 +4,10 @@
 <div class="row mb-4">
     <div class="col-md-8">
         <h2>Orders</h2>
+        <div class="input-group mb-3">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" id="customerSearch" placeholder="Search by customer name..." onkeyup="searchCustomers()">
+        </div>
     </div>
     <div class="col-md-4 text-end">
         <button class="btn btn-secondary me-2" onclick="showAddOrderModal()">

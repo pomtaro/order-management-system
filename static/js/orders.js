@@ -1,6 +1,7 @@
 let orders = [];
 let sortField = 'customer';
 let sortAsc = true;
+let searchQuery = '';
 
 const addOrderModal = new bootstrap.Modal(document.getElementById('addOrderModal'));
 const toast = new bootstrap.Toast(document.getElementById('toast'));
@@ -19,7 +20,14 @@ function displayOrders() {
     const tbody = document.getElementById('orderTableBody');
     tbody.innerHTML = '';
 
-    const sortedOrders = [...orders].sort((a, b) => {
+    let filteredOrders = orders;
+    if (searchQuery) {
+        filteredOrders = orders.filter(order => 
+            order.customer.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }
+
+    const sortedOrders = [...filteredOrders].sort((a, b) => {
         let comparison = 0;
         if (sortField === 'amount') {
             comparison = a.amount - b.amount;
@@ -29,11 +37,25 @@ function displayOrders() {
         return sortAsc ? comparison : -comparison;
     });
 
+    if (sortedOrders.length === 0) {
+        const row = tbody.insertRow();
+        const cell = row.insertCell(0);
+        cell.colSpan = 2;
+        cell.className = 'text-center text-muted';
+        cell.textContent = 'No orders found';
+        return;
+    }
+
     sortedOrders.forEach(order => {
         const row = tbody.insertRow();
         row.insertCell(0).textContent = order.customer;
         row.insertCell(1).textContent = order.amount.toFixed(2);
     });
+}
+
+function searchCustomers() {
+    searchQuery = document.getElementById('customerSearch').value;
+    displayOrders();
 }
 
 function sortTable(field) {
