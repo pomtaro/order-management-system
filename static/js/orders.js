@@ -4,6 +4,7 @@ let sortAsc = true;
 let searchQuery = '';
 
 const addOrderModal = new bootstrap.Modal(document.getElementById('addOrderModal'));
+const editOrderModal = new bootstrap.Modal(document.getElementById('editOrderModal'));
 const toast = new bootstrap.Toast(document.getElementById('toast'));
 
 async function loadOrders() {
@@ -40,7 +41,7 @@ function displayOrders() {
     if (sortedOrders.length === 0) {
         const row = tbody.insertRow();
         const cell = row.insertCell(0);
-        cell.colSpan = 2;
+        cell.colSpan = 3;
         cell.className = 'text-center text-muted';
         cell.textContent = 'No orders found';
         return;
@@ -50,6 +51,13 @@ function displayOrders() {
         const row = tbody.insertRow();
         row.insertCell(0).textContent = order.customer;
         row.insertCell(1).textContent = order.amount.toFixed(2);
+        
+        const actionsCell = row.insertCell(2);
+        const editButton = document.createElement('button');
+        editButton.className = 'btn btn-sm btn-outline-secondary';
+        editButton.innerHTML = '<i class="bi bi-pencil"></i>';
+        editButton.onclick = () => showEditOrderModal(order);
+        actionsCell.appendChild(editButton);
     });
 }
 
@@ -71,6 +79,13 @@ function sortTable(field) {
 function showAddOrderModal() {
     document.getElementById('addOrderForm').reset();
     addOrderModal.show();
+}
+
+function showEditOrderModal(order) {
+    document.getElementById('editOrderId').value = order.id;
+    document.getElementById('editCustomer').value = order.customer;
+    document.getElementById('editAmount').value = order.amount;
+    editOrderModal.show();
 }
 
 async function addOrder() {
@@ -96,6 +111,38 @@ async function addOrder() {
         displayOrders();
         addOrderModal.hide();
         showToast('Order added successfully', 'success');
+    } catch (error) {
+        showToast(error.message, 'danger');
+    }
+}
+
+async function updateOrder() {
+    const id = document.getElementById('editOrderId').value;
+    const customer = document.getElementById('editCustomer').value;
+    const amount = document.getElementById('editAmount').value;
+
+    try {
+        const response = await fetch(`/api/orders/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ customer, amount }),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error);
+        }
+
+        const updatedOrder = await response.json();
+        const index = orders.findIndex(o => o.id === updatedOrder.id);
+        if (index !== -1) {
+            orders[index] = updatedOrder;
+        }
+        displayOrders();
+        editOrderModal.hide();
+        showToast('Order updated successfully', 'success');
     } catch (error) {
         showToast(error.message, 'danger');
     }

@@ -32,6 +32,22 @@ def add_order():
     except (ValueError, KeyError) as e:
         return jsonify({'error': str(e)}), 400
 
+@app.route('/api/orders/<int:order_id>', methods=['PUT'])
+def update_order(order_id):
+    data = request.json
+    try:
+        order = Order.query.get_or_404(order_id)
+        amount = Decimal(str(data['amount']))
+        if amount <= 0:
+            return jsonify({'error': 'Amount must be positive'}), 400
+            
+        order.customer = data['customer'].strip()
+        order.amount = amount
+        db.session.commit()
+        return jsonify(order.to_dict())
+    except (ValueError, KeyError) as e:
+        return jsonify({'error': str(e)}), 400
+
 @app.route('/api/import-csv', methods=['POST'])
 def import_csv():
     if 'file' not in request.files:
